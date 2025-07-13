@@ -1,10 +1,11 @@
-# TypeScript
+# TypeScript（小满ZS教程）
 
 ## 基础包
+
 ```shell
 npm install -g typescript
 npm i @types/node --save-dev
-npm i ts-node --g
+npm i ts-node --g # ts-node index.ts //可直接运行ts
 ```
 
 ## 类型
@@ -85,8 +86,10 @@ let a: Axx = {
     ```
 
 ## 函数扩展
+
 1. 参数不能多传，也不能少传，且需要按照约定的类型来
 2. 函数的可选参数
+
     ```ts
     //通过?表示该参数为可选参数
     const fn = (name: string, age?:number): string => {
@@ -96,6 +99,7 @@ let a: Axx = {
     ```
 
 3. 函数默认值
+
     ```ts
     const fn = (name: string = "我是默认值"): string => {
       return name
@@ -104,6 +108,7 @@ let a: Axx = {
     ```
 
 4. 接口定义函数
+
     ```ts
     //定义参数 num 和 num2  ：后面定义返回值的类型
     interface Add {
@@ -114,6 +119,7 @@ let a: Axx = {
         return num + num2
     }
     fn(5, 5)
+    ```
 
 
     interface User{
@@ -126,6 +132,7 @@ let a: Axx = {
     ```
 
 5. 定义剩余参数
+
     ```ts
     const fn = (array:number[],...items:any[]):any[] => {
           console.log(array,items)
@@ -200,6 +207,7 @@ const a2 = [10, 20];
 a1.unshift(30); // 错误，此时已经断言字面量为[10, 20],数据无法做任何修改
 a2.unshift(30); // 通过，没有修改指针
 ```
+
 #### 类型断言是不具影响力的
 
 虽然可以通过编译，但是并没有什么用 并不会影响结果, 因为编译过程中会删除类型断言
@@ -218,7 +226,7 @@ Document、HTMLElement、Event、NodeList 等
 
 如果我们不指定返回的类型TS是推断不出来返回的是什么类型
 指定返回的类型
-函数定义返回promise 语法规则:Promise<T> 类型
+函数定义返回promise 语法规则:`Promise<T>` 类型
 
 ## Class 类
 
@@ -244,7 +252,7 @@ Document、HTMLElement、Event、NodeList 等
 ## interface 定义 类
 
 1. ts interface 定义类 使用关键字 implements
-2. 后面跟interface的名字多个用逗号隔开 
+2. 后面跟interface的名字多个用逗号隔开
 3. 继承还是用extends
 
 ## 抽象类
@@ -255,6 +263,7 @@ Document、HTMLElement、Event、NodeList 等
 或者你也可以把他作为一个基类-> 通过继承一个派生类去实现基类的一些方法
 
 ### 语法
+
 abstract class | abstract getName(): string
 
 **我们定义的抽象方法必须在派生类实现**
@@ -268,6 +277,7 @@ abstract class | abstract getName(): string
 元组（Tuple）是固定数量的不同类型的元素的组合。
 
 元组与集合的不同之处在于：
+
 1. 元组中的元素类型可以是不同的，而且数量固定。
 2. 元组的好处在于可以把多个元素作为一个单元传递。
 3. 如果一个方法需要返回多个值，可以把这多个值作为元组返回，而不需要创建额外的类来表示。
@@ -283,6 +293,7 @@ enum 关键字定义
 代表的值从 0 开始可以不写值
 
 #### 增长枚举
+
 需要写第一个的值（注意 step 都是 1）
 
 ### 字符串枚举
@@ -290,6 +301,7 @@ enum 关键字定义
 值都是字符串
 
 ### 异构枚举
+
 枚举可以混合字符串和数字 (不能是 boolean)
 
 ### 接口枚举
@@ -316,6 +328,7 @@ let obj:A = {
 
 let  和 var 都是不允许的声明只能使用const
 大多数情况下，枚举是十分有效的方案。 然而在某些情况下需求很严格。
+
 1. 为了避免在额外生成的代码上的开销和额外的非直接的对枚举成员的访问，我们可以使用 const枚举。
 2. 常量枚举通过在枚举上使用 const修饰符来定义
 
@@ -433,6 +446,7 @@ function isXiaoMan(value:A) {
 可以传递参做为唯一标识 只支持 string 和 number类型的参数
 
 特点：
+
 1. Symbol 值是唯一的
 2. 可用作对象属性的键
 3. 使用 Symbol 定义的属性不能通过以下遍历拿到
@@ -443,6 +457,7 @@ function isXiaoMan(value:A) {
     需要 Symbol 属性：使用 Object.getOwnPropertySymbols() 或 Reflect.ownKeys()
 
 ### Symbol.iterator 迭代器 和 生成器 for of
+
 支持遍历大部分类型迭代器 arr nodeList argumetns set map 等
 
 ```ts
@@ -455,3 +470,642 @@ console.log(iterator.next());  //{ value: 3, done: false }
 console.log(iterator.next());  //{ value: 4, done: false }
 console.log(iterator.next());  //{ value: undefined, done: true }
 ```
+
+手动实现迭代器
+
+```ts
+const obj = {
+    max: 5,
+    current: 0,
+    [Symbol.iterator]() {
+        return {
+            max: this.max,
+            current: this.current,
+            next() {
+                if (this.current == this.max) {
+                    return {
+                        value: undefined,
+                        done: true
+                    }
+                } else {
+                    return {
+                        value: this.current++,
+                        done: false
+                    }
+                }
+            }
+        }
+    }
+}
+console.log([...obj])
+ 
+for (let val of obj) {
+   console.log(val)
+}
+```
+
+以下为这些symbols的列表：
+
+Symbol.hasInstance
+方法，会被instanceof运算符调用。构造器对象用来识别一个对象是否是其实例。
+
+Symbol.isConcatSpreadable
+布尔值，表示当在一个对象上调用Array.prototype.concat时，这个对象的数组元素是否可展开。
+
+Symbol.iterator
+方法，被for-of语句调用。返回对象的默认迭代器。
+
+Symbol.match
+方法，被String.prototype.match调用。正则表达式用来匹配字符串。
+
+Symbol.replace
+方法，被String.prototype.replace调用。正则表达式用来替换字符串中匹配的子串。
+
+Symbol.search
+方法，被String.prototype.search调用。正则表达式返回被匹配部分在字符串中的索引。
+
+Symbol.species
+函数值，为一个构造函数。用来创建派生对象。
+
+Symbol.split
+方法，被String.prototype.split调用。正则表达式来用分割字符串。
+
+Symbol.toPrimitive
+方法，被ToPrimitive抽象操作调用。把对象转换为相应的原始值。
+
+Symbol.toStringTag
+方法，被内置方法Object.prototype.toString调用。返回创建对象时默认的字符串描述。
+
+Symbol.unscopables
+对象，它自己拥有的属性会被with作用域排除在外。
+
+## 泛型
+
+```ts
+function Add<T>(a: T, b: T): Array<T>  {
+    return [a,b]
+}
+// <T> 代替需要传入的类型，类似声明
+ 
+Add<number>(1,2)
+Add<string>('1','2')
+````
+
+### 泛型约束
+
+```ts
+interface Len {
+   length:number
+}
+ 
+function getLegnth<T extends Len>(arg:T) {
+  return arg.length
+}
+ 
+getLegnth<string>('123')
+```
+
+### 使用 keyof 约束对象
+
+其中使用了TS泛型和泛型约束。首先定义了T类型并使用extends关键字继承object类型的子类型，然后使用keyof操作符获取T类型的所有键，它的返回 类型是联合 类型，最后利用extends关键字约束 K类型必须为keyof T联合类型的子类型
+
+```ts
+function prop<T, K extends keyof T>(obj: T, key: K) {
+   return obj[key]
+}
+ 
+let o = { a: 1, b: 2, c: 3 }
+ 
+prop(o, 'a') 
+prop(o, 'd') //此时就会报错发现找不到
+```
+
+### 泛型类
+
+声明方法跟函数类似名称后面定义<类型>
+
+使用的时候确定类型`new Sub<number>()`
+
+```ts
+class Sub<T>{
+   attr: T[] = [];
+   add (a:T):T[] {
+      return [a]
+   }
+}
+ 
+let s = new Sub<number>()
+s.attr = [1,2,3]
+s.add(123)
+ 
+let str = new Sub<string>()
+str.attr = ['1','2','3']
+str.add('123')
+```
+
+## ts 配置文件（tsconfig.json）
+
+命令`tsc --init`
+
+```json
+"compilerOptions": {
+  "incremental": true, // TS编译器在第一次编译之后会生成一个存储编译信息的文件，第二次编译会在第一次的基础上进行增量编译，可以提高编译的速度
+  "tsBuildInfoFile": "./buildFile", // 增量编译文件的存储位置
+  "diagnostics": true, // 打印诊断信息 
+  "target": "ES5", // 目标语言的版本
+  "module": "CommonJS", // 生成代码的模板标准
+  "outFile": "./app.js", // 将多个相互依赖的文件生成一个文件，可以用在AMD模块中，即开启时应设置"module": "AMD",
+  "lib": ["DOM", "ES2015", "ScriptHost", "ES2019.Array"], // TS需要引用的库，即声明文件，es5 默认引用dom、es5、scripthost,如需要使用es的高级版本特性，通常都需要配置，如es8的数组新特性需要引入"ES2019.Array",
+  "allowJS": true, // 允许编译器编译JS，JSX文件
+  "checkJs": true, // 允许在JS文件中报错，通常与allowJS一起使用
+  "outDir": "./dist", // 指定输出目录
+  "rootDir": "./", // 指定输出文件目录(用于输出)，用于控制输出目录结构
+  "declaration": true, // 生成声明文件，开启后会自动生成声明文件
+  "declarationDir": "./file", // 指定生成声明文件存放目录
+  "emitDeclarationOnly": true, // 只生成声明文件，而不会生成js文件
+  "sourceMap": true, // 生成目标文件的sourceMap文件
+  "inlineSourceMap": true, // 生成目标文件的inline SourceMap，inline SourceMap会包含在生成的js文件中
+  "declarationMap": true, // 为声明文件生成sourceMap
+  "typeRoots": [], // 声明文件目录，默认时node_modules/@types
+  "types": [], // 加载的声明文件包
+  "removeComments":true, // 删除注释 
+  "noEmit": true, // 不输出文件,即编译后不会生成任何js文件
+  "noEmitOnError": true, // 发送错误时不输出任何文件
+  "noEmitHelpers": true, // 不生成helper函数，减小体积，需要额外安装，常配合importHelpers一起使用
+  "importHelpers": true, // 通过tslib引入helper函数，文件必须是模块
+  "downlevelIteration": true, // 降级遍历器实现，如果目标源是es3/5，那么遍历器会有降级的实现
+  "strict": true, // 开启所有严格的类型检查
+  "alwaysStrict": true, // 在代码中注入'use strict'
+  "noImplicitAny": true, // 不允许隐式的any类型
+  "strictNullChecks": true, // 不允许把null、undefined赋值给其他类型的变量
+  "strictFunctionTypes": true, // 不允许函数参数双向协变
+  "strictPropertyInitialization": true, // 类的实例属性必须初始化
+  "strictBindCallApply": true, // 严格的bind/call/apply检查
+  "noImplicitThis": true, // 不允许this有隐式的any类型
+  "noUnusedLocals": true, // 检查只声明、未使用的局部变量(只提示不报错)
+  "noUnusedParameters": true, // 检查未使用的函数参数(只提示不报错)
+  "noFallthroughCasesInSwitch": true, // 防止switch语句贯穿(即如果没有break语句后面不会执行)
+  "noImplicitReturns": true, //每个分支都会有返回值
+  "esModuleInterop": true, // 允许export=导出，由import from 导入
+  "allowUmdGlobalAccess": true, // 允许在模块中全局变量的方式访问umd模块
+  "moduleResolution": "node", // 模块解析策略，ts默认用node的解析策略，即相对的方式导入
+  "baseUrl": "./", // 解析非相对模块的基地址，默认是当前目录
+  "paths": { // 路径映射，相对于baseUrl
+    // 如使用jq时不想使用默认版本，而需要手动指定版本，可进行如下配置
+    "jquery": ["node_modules/jquery/dist/jquery.min.js"]
+  },
+  "rootDirs": ["src","out"], // 将多个目录放在一个虚拟目录下，用于运行时，即编译后引入文件的位置可能发生变化，这也设置可以虚拟src和out在同一个目录下，不用再去改变路径也不会报错
+  "listEmittedFiles": true, // 打印输出文件
+  "listFiles": true// 打印编译的文件(包括引用的声明文件)
+}
+ 
+// 指定一个匹配列表（属于自动指定该路径下的所有ts相关文件）
+"include": [
+   "src/**/*"
+],
+// 指定一个排除列表（include的反向操作）
+ "exclude": [
+   "demo.ts"
+],
+// 指定哪些文件使用该配置（属于手动一个个指定文件）
+ "files": [
+   "demo.ts"
+]
+```
+
+
+
+## 命名空间（namespace）
+
+我们在工作中无法避免`全局变量`造成的污染，TypeScript提供了namespace 避免这个问题出现
+
+- 内部模块，主要用于组织代码，避免命名冲突。
+- 命名空间内的类默认私有
+- 通过 `export` 暴露
+- 通过 `namespace` 关键字定义
+
+命名空间中通过`export`将想要暴露的部分导出
+
+如果不用export 导出是无法读取其值的
+
+使用类型
+
+1. 嵌套命名空间
+
+   ```ts
+   namespace a {
+       export namespace b {
+           export class Vue {
+               parameters: string
+               constructor(parameters: string) {
+                   this.parameters = parameters
+               }
+           }
+       }
+   }
+    
+   let v = a.b.Vue
+    
+   new v('1')
+   ```
+
+   
+
+2. 抽离命名空间（命名空间单独一个文件）
+
+3. 简化命名空间
+
+   ```ts
+   namespace A  {
+       export namespace B {
+           export const C = 1
+       }
+   }
+    
+   import X = A.B.C
+    
+   console.log(X);
+   ```
+
+4. 会自动合并命名空间（重名的命名空间会合并）
+
+## 模块解析
+
+1. 默认导入和导出
+
+   ```js
+   //导出
+   export default {
+       a:1,
+   }
+   //引入
+   import test from "./test";
+   ```
+
+2. 分别导出
+
+3. 重名问题 如果 导入的时候叫add但是已经有变量占用了可以用as重命名
+
+4. 动态引入
+
+## 声明文件（d.ts）
+
+### 声明文件 declare
+
+当使用第三方库时，我们需要引用它的声明文件，才能获得对应的代码补全、接口提示等功能。
+
+第三方包声明文件npm地址   [npm](https://www.npmjs.com/~types?activeTab=packages)
+
+导入声明文件 `/// <reference path = "runoob.d.ts" />`
+
+## Mixins 混入
+
+### 对象混入
+
+可以使用es6的Object.assign 合并多个对象，会被推断为交叉类型
+
+### 类的混入
+
+首先声明两个`mixins`类 （严格模式要关闭不然编译不过）
+
+```ts
+class A {
+    type: boolean = false;
+    changeType() {
+        this.type = !this.type
+    }
+}
+ 
+ 
+class B {
+    name: string = '张三';
+    getName(): string {
+        return this.name;
+    }
+}
+
+
+// 首先应该注意到的是，没使用extends而是使用implements。 把类当成了接口
+// 为将要mixin进来的属性方法创建出占位属性。 这告诉编译器这些成员在运行时是可用的。 这样就能使用mixin带来的便利，虽说需要提前定义一些占位属性
+class C implements A,B{
+    type:boolean
+    changeType:()=>void;
+    name: string;
+    getName:()=> string
+}
+
+// 最后，创建这个帮助函数，帮我们做混入操作。 它会遍历mixins上的所有属性，并复制到目标上去，把之前的占位属性替换成真正的实现代码
+
+// Object.getOwnPropertyNames()可以获取对象自身的属性，除去他继承来的属性，对它所有的属性遍历，它是一个数组，遍历一下它所有的属性名
+
+Mixins(C, [A, B])
+function Mixins(curCls: any, itemCls: any[]) {
+    itemCls.forEach(item => {
+        Object.getOwnPropertyNames(item.prototype).forEach(name => {
+            curCls.prototype[name] = item.prototype[name]
+        })
+    })
+}
+```
+
+#### 更优雅的实现（TypeScript 2.2+）
+
+```ts
+// 混入函数类型
+type Constructor<T = {}> = new (...args: any[]) => T;
+
+// 可跳转的混入
+function Jumpable<TBase extends Constructor>(Base: TBase) {
+  return class extends Base {
+    jump() {
+      console.log("Jumping!");
+    }
+  };
+}
+
+// 可游泳的混入
+function Swimmable<TBase extends Constructor>(Base: TBase) {
+  return class extends Base {
+    swim() {
+      console.log("Swimming!");
+    }
+  };
+}
+
+// 基础类
+class Animal {
+  constructor(public name: string) {}
+}
+
+// 应用混入
+const JumpingSwimmingAnimal = Swimmable(Jumpable(Animal));
+const myPet = new JumpingSwimmingAnimal("Fido");
+
+myPet.jump(); // "Jumping!"
+myPet.swim(); // "Swimming!"
+```
+
+
+
+## 装饰器（Decorator）
+
+1. Decorator 装饰器是一项实验性特性，在未来的版本中可能会发生改变
+
+2. 它们不仅增加了代码的可读性，清晰地表达了意图，而且提供一种方便的手段，增加或修改类的功能
+
+3. 若要启用实验性的装饰器特性，你必须在命令行或`tsconfig.json`里启用编译器选项`experimentalDecorators: true`
+
+### 装饰器
+
+*装饰器*是一种特殊类型的声明，它能够被附加到[类声明](https://www.tslang.cn/docs/handbook/decorators.html#class-decorators)，[方法](https://www.tslang.cn/docs/handbook/decorators.html#method-decorators)， [访问符](https://www.tslang.cn/docs/handbook/decorators.html#accessor-decorators)，[属性](https://www.tslang.cn/docs/handbook/decorators.html#property-decorators)或[参数](https://www.tslang.cn/docs/handbook/decorators.html#parameter-decorators)上。
+
+1. 类装饰器`ClassDecorator `  修改或增强类的行为（如添加元数据、扩展功能、替换构造函数等）
+2. 方法装饰器`MethodDecorator ` 修改或增强类方法（如日志记录、权限控制、性能监控）。 `PropertyDescriptor` 属性描述符类型
+3. 属性装饰器`PropertyDecorator ` 修改或增强类属性（如自动绑定、数据校验）
+4. 参数装饰器`ParameterDecorator ` 修改或增强方法参数（如依赖注入、参数校验）
+
+装饰器的执行顺序遵循以下规则：
+
+1. **参数装饰器** -> **方法装饰器** -> **访问器装饰器** -> **属性装饰器** -> **类装饰器**（从内到外）。
+2. 同一类型的多个装饰器，**从上到下执行**。
+
+### 类装饰器
+
+```ts
+//class A {
+//    constructor() {
+//    }
+//}
+
+// 定义类装饰器函数 他会把ClassA的构造函数传入你的watcher函数当做第一个参数
+const watcher: ClassDecorator = (target: Function) => {
+    target.prototype.getParams = <T>(params: T):T => {
+        return params
+    }
+}
+
+// 通过@函数名使用
+@watcher
+class A {
+    constructor() {
+ 
+    }
+}
+
+const a = new A();
+console.log((a as any).getParams('123'));
+```
+
+### 装饰器工厂
+
+其实也就是一个`高阶函数` 外层的函数接受值 里层的函数最终接受类的构造函数
+
+```ts
+const watcher = (name: string): ClassDecorator => {
+    return (target: Function) => {
+        target.prototype.getParams = <T>(params: T): T => {
+            return params
+        }
+        target.prototype.getOptions = (): string => {
+            return name
+        }
+    }
+}
+ 
+@watcher('name')
+class A {
+    constructor() {
+ 
+    }
+}
+ 
+const a = new A();
+console.log((a as any).getParams('123'));
+```
+
+
+
+### 装饰器组合
+
+可以使用多个装饰器
+
+```ts
+const watcher = (name: string): ClassDecorator => {
+    return (target: Function) => {
+        target.prototype.getParams = <T>(params: T): T => {
+            return params
+        }
+        target.prototype.getOptions = (): string => {
+            return name
+        }
+    }
+}
+const watcher2 = (name: string): ClassDecorator => {
+    return (target: Function) => {
+        target.prototype.getNames = ():string => {
+            return name
+        }
+    }
+}
+ 
+@watcher2('name2')
+@watcher('name')
+class A {
+    constructor() {
+ 
+    }
+}
+ 
+ 
+const a = new A();
+console.log((a as any).getOptions());
+console.log((a as any).getNames());
+```
+
+
+
+### 方法装饰器
+
+返回三个参数
+
+1. 对于静态成员来说是类的构造函数，对于实例成员是类的原型对象。
+2. 成员的名字。
+3. 成员的*属性描述符*。
+
+```js
+const met:MethodDecorator = (...args) => {
+    console.log(args);
+}
+
+// 打印结果
+// [
+//   {},
+//   'setParams',
+//   {
+//     value: [Function: setParams],
+//     writable: true,
+//     enumerable: false,
+//     configurable: true
+//   }
+// ]
+```
+
+### 属性装饰器
+
+返回两个参数
+
+1. 对于静态成员来说是类的构造函数，对于实例成员是类的原型对象。
+2. 属性的名字。
+
+```ts
+const met:PropertyDecorator = (...args) => {
+    console.log(args);
+}
+ 
+class A {
+    @met
+    name:string = '123'
+    constructor() {
+ 
+    }
+   
+}
+ 
+const a = new A();// [ {}, 'name', undefined ]
+```
+
+
+
+### 参数装饰器
+
+返回三个参数
+
+1. 对于静态成员来说是类的构造函数，对于实例成员是类的原型对象。
+2. 成员的名字。
+3. 参数在函数参数列表中的索引。
+
+```ts
+const met:ParameterDecorator = (...args) => {
+    console.log(args);
+}
+
+class A {
+    constructor() {
+ 
+    }
+    setParasm (@met name:string = '213') {
+ 
+    }
+}
+
+const a = new A();
+```
+
+### 元数据存储
+
+```ts
+import 'reflect-metadata'
+```
+
+可以快速存储元数据然后在用到的地方取出来 defineMetadata getMetadata
+
+```ts
+//1.类装饰器 ClassDecorator 
+//2.属性装饰器 PropertyDecorator
+//3.参数装饰器 ParameterDecorator
+//4.方法装饰器 MethodDecorator PropertyDescriptor 'https://api.apiopen.top/api/getHaoKanVideo?page=0&size=10'
+//5.装饰器工厂
+import axios from 'axios'
+import 'reflect-metadata'
+const Base  = (base:string) => {
+    const fn:ClassDecorator = (target) => {
+        target.prototype.base = base;
+    }
+    return fn
+} 
+ 
+const Get = (url:string) => {
+   const fn:MethodDecorator = (target:any,key,descriptor:PropertyDescriptor) => {
+        axios.get(url).then(res=>{
+            const key = Reflect.getMetadata('key',target)
+            descriptor.value(key ? res.data[key] : res.data)
+        })
+        
+   }
+   return fn
+}
+ 
+const result = () => {
+    const fn:ParameterDecorator = (target:any,key,index) => {
+        Reflect.defineMetadata('key','result',target)
+    }
+    return fn
+}
+ 
+const Bt:PropertyDecorator = (target,key) => {
+   console.log(target,key)
+}
+ 
+@Base('/api')
+class Http {
+    @Bt
+    xiaoman:string
+    constructor () {
+        this.xiaoman = 'xiaoman'
+    }
+    @Get('https://api.apiopen.top/api/getHaoKanVideo?page=0&size=10')
+    getList (@result() data:any) {
+        console.log(data)
+         
+    }
+    // @Post('/aaaa')
+    create () {
+ 
+    }
+}
+ 
+const http = new Http() as any
+ 
+console.log(http)
+```
+
