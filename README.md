@@ -8,6 +8,38 @@ npm i @types/node --save-dev
 npm i ts-node --g # ts-node index.ts //可直接运行ts
 ```
 
+## 关键字速查
+
+
+
+| **关键字/特性** | **说明**                                                     |
+| --------------- | ------------------------------------------------------------ |
+| `any`           | 允许变量可以是任何类型，禁用类型检查。                       |
+| `unknown`       | 与 `any` 类似，但在使用之前必须进行类型检查。                |
+| `never`         | 表示一个函数或方法永远不会返回（例如：抛出错误或死循环）。   |
+| `void`          | 表示没有返回值，通常用于函数返回类型。                       |
+| `as`            | 类型断言，用于告诉编译器变量的具体类型。                     |
+| `interface`     | 定义对象的类型（结构），可以在多个类或对象中共享。           |
+| `type`          | 定义类型别名，可以用来定义联合类型、交叉类型等复杂类型。     |
+| `enum`          | 枚举类型，允许为一组常量值赋予有意义的名字。                 |
+| `declare`       | 声明一个变量或模块，但不需要提供实现。常用于第三方库的声明文件。 |
+| `public`        | 用于类中成员的访问控制，表示该成员是公开的，可以被外部访问。 |
+| `private`       | 用于类中成员的访问控制，表示该成员只能在类内部访问。         |
+| `protected`     | 用于类中成员的访问控制，表示该成员可以在类及其子类中访问。   |
+| `readonly`      | 用于修饰类中的属性，表示该属性是只读的。                     |
+| `super`         | 调用父类的方法或构造函数。                                   |
+| `this`          | 在类中表示当前实例，指向当前对象的类型。                     |
+| `constructor`   | 用于定义类的构造函数。                                       |
+| `module`        | 在模块化代码中定义模块，TypeScript 中的模块和 ES6 模块有相似之处。 |
+| `namespace`     | 用于组织代码，避免命名冲突，是 TypeScript 独有的特性。       |
+| `global`        | 表示全局命名空间，常与 `declare` 一起使用。                  |
+| `asserts`       | 类型断言的一种语法，用于在某些条件下自动推断类型。           |
+| `keyof`         | 获取某个类型的所有键名，生成一个联合类型。                   |
+| `infer`         | 在条件类型中推导类型，通常与 `extends` 结合使用。            |
+| `extends`       | 用于类或接口的继承，或者条件类型中的约束。                   |
+
+
+
 ## 类型
 
 1. top type 顶级类型 any unknown
@@ -114,7 +146,7 @@ let a: Axx = {
     interface Add {
         (num:  number, num2: number): number
     }
-
+    
     const fn: Add = (num: number, num2: number): number => {
         return num + num2
     }
@@ -775,8 +807,7 @@ class A {
         this.type = !this.type
     }
 }
- 
- 
+
 class B {
     name: string = '张三';
     getName(): string {
@@ -888,7 +919,6 @@ const watcher: ClassDecorator = (target: Function) => {
 @watcher
 class A {
     constructor() {
- 
     }
 }
 
@@ -911,19 +941,16 @@ const watcher = (name: string): ClassDecorator => {
         }
     }
 }
- 
+
 @watcher('name')
 class A {
     constructor() {
- 
     }
 }
- 
+
 const a = new A();
 console.log((a as any).getParams('123'));
 ```
-
-
 
 ### 装饰器组合
 
@@ -947,16 +974,13 @@ const watcher2 = (name: string): ClassDecorator => {
         }
     }
 }
- 
 @watcher2('name2')
 @watcher('name')
 class A {
     constructor() {
- 
     }
 }
- 
- 
+
 const a = new A();
 console.log((a as any).getOptions());
 console.log((a as any).getNames());
@@ -1001,16 +1025,14 @@ const met:MethodDecorator = (...args) => {
 const met:PropertyDecorator = (...args) => {
     console.log(args);
 }
- 
+
 class A {
     @met
     name:string = '123'
     constructor() {
- 
     }
-   
 }
- 
+
 const a = new A();// [ {}, 'name', undefined ]
 ```
 
@@ -1031,10 +1053,9 @@ const met:ParameterDecorator = (...args) => {
 
 class A {
     constructor() {
- 
+
     }
-    setParasm (@met name:string = '213') {
- 
+    setParams (@met name:string = '213') {
     }
 }
 
@@ -1050,7 +1071,7 @@ import 'reflect-metadata'
 可以快速存储元数据然后在用到的地方取出来 defineMetadata getMetadata
 
 ```ts
-//1.类装饰器 ClassDecorator 
+//1.类装饰器 ClassDecorator
 //2.属性装饰器 PropertyDecorator
 //3.参数装饰器 ParameterDecorator
 //4.方法装饰器 MethodDecorator PropertyDescriptor 'https://api.apiopen.top/api/getHaoKanVideo?page=0&size=10'
@@ -1062,30 +1083,29 @@ const Base  = (base:string) => {
         target.prototype.base = base;
     }
     return fn
-} 
- 
+}
+
 const Get = (url:string) => {
    const fn:MethodDecorator = (target:any,key,descriptor:PropertyDescriptor) => {
         axios.get(url).then(res=>{
             const key = Reflect.getMetadata('key',target)
             descriptor.value(key ? res.data[key] : res.data)
         })
-        
    }
    return fn
 }
- 
+
 const result = () => {
     const fn:ParameterDecorator = (target:any,key,index) => {
         Reflect.defineMetadata('key','result',target)
     }
     return fn
 }
- 
+
 const Bt:PropertyDecorator = (target,key) => {
    console.log(target,key)
 }
- 
+
 @Base('/api')
 class Http {
     @Bt
@@ -1096,16 +1116,221 @@ class Http {
     @Get('https://api.apiopen.top/api/getHaoKanVideo?page=0&size=10')
     getList (@result() data:any) {
         console.log(data)
-         
     }
     // @Post('/aaaa')
     create () {
- 
+
     }
 }
- 
+
 const http = new Http() as any
- 
+
 console.log(http)
 ```
+
+## weakMap weakSet Set Map
+
+### Set
+集合是由一组无序且唯一(即不能重复)的项组成的，可以想象成集合是一个既没有重复元素，也没有顺序概念的数组
+
+操作方法
+
+1. add(value)：添加某个值，返回 Set 结构本身。
+
+2. delete(value)：删除某个值，返回一个布尔值，表示删除是否成功。
+
+3. has(value)：返回一个布尔值，表示该值是否为 Set 的成员。
+
+4. clear()：清除所有成员，无返回值。
+
+5. size: 返回set数据结构的数据长度
+
+### Map
+
+它类似于对象，也是键值对的集合，但是“键”的范围不限于字符串，各种类型的值（包括对象）都可以当作键，是一种更完善的 Hash 结构实现。如果你需要“键值对”的数据结构，Map 比 Object 更合适
+
+操作方法与 Set 相同
+
+### WeakSet 和 WeakMap
+
+weakSet 和 weakMap 的键都是弱引用，不会被计入垃圾回收
+
+```ts
+let obj:any = {name:'小满zs'} //1
+let aahph:any = obj //2
+let wmap:WeakMap<object,string> = new WeakMap()
+
+wmap.set(obj,'爱安徽潘慧') //2 他的键是弱引用不会计数的
+
+obj = null // -1
+aahph = null;//-1
+//v8 GC 不稳定 最少200ms
+
+setTimeout(()=>{
+    console.log(wmap)
+},500)
+```
+
+## TS 进阶用法 Proxy 和 Reflect
+
+Proxy 对象用于创建一个对象的代理，从而实现基本操作的拦截和自定义（如属性查找、赋值、枚举、函数调用等）
+
+与大多数全局对象不同Reflect并非一个构造函数，所以不能通过new运算符对其进行调用，或者将Reflect对象作为一个函数来调用。Reflect的所有属性和方法都是静态的（就像Math对象）
+
+```ts
+type Person = {
+    name: string,
+    age: number,
+    text: string
+}
+
+const proxy = (object: any, key: any) => {
+    return new Proxy(object, {
+        get(target, prop, receiver) {
+            console.log(`get key======>${key}`);
+            return Reflect.get(target, prop, receiver)
+        },
+
+        set(target, prop, value, receiver) {
+            console.log(`set key======>${key}`);
+
+            return Reflect.set(target, prop, value, receiver)
+        }
+    })
+}
+
+const logAccess = <T>(object: T, key: keyof T): T => {
+    return proxy(object, key)
+}
+
+let man: Person = logAccess({
+    name: "小满",
+    age: 20,
+    text: "我很小"
+}, 'age')
+
+let man2 = logAccess({
+    id:1,
+    name:"小满2"
+}, 'name')
+
+man.age = 30
+
+console.log(man);
+```
+
+## 泛型工具
+
+泛型工具是一组预定义的泛型类型和操作符，用于操作和转换类型。它们可以帮助我们编写更灵活、更通用的代码，并提高代码的可读性和可维护性。
+
+### Partial 和 Required
+
+`Partial` 是一个泛型类型，用于将一个类型的所有属性变为可选。与之相反，`Required` 是一个泛型类型，用于将一个类型的所有属性变为必选
+
+#### Partial
+
+```ts
+type test = Partial<User>
+
+//转换完成之后的结果
+type test = {
+    name?: string | undefined;
+    age?: number | undefined;
+}
+
+//原理
+type PratialUser<T,K extends keyof T> = {
+    [P in K]?: T[P]
+}
+```
+
+#### Required
+
+```ts
+interface User {
+    name?: string;
+    age?: number;
+}
+//原理
+type CustomRequired<T> = {
+    [P in keyof T]-?: T[P]
+}
+
+type test = Required<User>
+type test2 = CustomRequired<User>
+
+//结果
+interface User {
+    name: string;
+    age: number;
+}
+```
+
+### Pick
+
+pick用于从一个类型中选取指定的属性
+
+原理：为什么要搞never？
+
+因为never在联合类型中会被忽略
+
+```ts
+interface User {
+    name?: string;
+    age?: number;
+}
+//原理
+type CoustomPick<T,K extends keyof T> = {
+    [P in K]: T[P]
+}
+
+type test = Pick<User,'age'>
+
+//结果
+type test = {
+    age?: number | undefined;
+}
+```
+
+
+
+### Exclude
+
+`Exclude` 是一个类型操作符，用于从一个类型的属性集合中排除指定的属性
+
+```ts
+//原理
+type CustomExclude<T,K> = T extends K ? never : T 
+
+type test = Exclude<'a' | 'b' | 'c', 'a' | 'b'>
+
+//结果
+
+type test = "c"
+```
+
+### Omit
+
+用于创建一个新类型，该新类型从原始类型中排除指定的属性
+
+```ts
+interface User {
+    address?: string;
+    name?: string;
+    age?: number;
+}
+//原理
+type customOmit<T,K> = Pick<T,Exclude<keyof T,K>>
+
+type test = Omit<User,'age'>
+
+//结果
+
+type test = {
+    address?: string | undefined;
+    name?: string | undefined;
+}
+```
+
+
 
